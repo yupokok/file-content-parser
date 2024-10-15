@@ -7,10 +7,6 @@ namespace CodingAssignmentLib
     {
         public IEnumerable<Data> Parse(string content)
         {
-            if (string.IsNullOrWhiteSpace(content))
-            {
-                throw new ArgumentException("Content cannot be null or empty", nameof(content));
-            }
             var items = JsonSerializer.Deserialize<List<JsonItem>>(content);
             return items.Select(item => new Data(item.Key, item.Value));
         }

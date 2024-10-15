@@ -43,9 +43,13 @@ void Display()
         dataList = new CsvContentParser().Parse(fileUtility.GetContent(fileName));
     }
 
-    else if (fileUtility.GetExtension(fileName) == ".json") 
+    else if (fileUtility.GetExtension(fileName) == ".json")
     {
         dataList = new JsonContentParser().Parse(fileUtility.GetContent(fileName));
+    }
+    else if (fileUtility.GetExtension(fileName) == ".xml")
+    {
+        dataList = new XmlContentParser().Parse(fileUtility.GetContent(fileName));
     }
 
     Console.WriteLine("Data:");
@@ -56,7 +60,52 @@ void Display()
     }
 }
 
+
 void Search()
 {
     Console.WriteLine("Enter the key to search.");
+    var searchTerm = Console.ReadLine()?.Trim();
+    var dataDirectory = "data";
+    var allowedExtensions = new[] { ".csv", ".json", ".xml" };
+
+    var fileUtility = new FileUtility(new FileSystem());
+    var files = fileUtility.GetAllFiles(dataDirectory, allowedExtensions);
+
+    var foundResults = new List<string>();
+
+    foreach (var file in files)
+    {
+        fileUtility.GetExtension(file);
+        var content = fileUtility.GetContent(file);
+        IEnumerable<Data> results = Enumerable.Empty<Data>();
+
+        if (fileUtility.GetExtension(file) == ".csv")
+        {
+            results = new CsvContentParser().Parse(content);
+        }
+        else if (fileUtility.GetExtension(file) == ".json")
+        {
+            results = new JsonContentParser().Parse(content);
+        }
+        else if (fileUtility.GetExtension(file) == ".xml")
+        {
+            results = new XmlContentParser().Parse(content);
+        }
+        var matches = results
+            .Where(data => data.Key.StartsWith(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        foreach (var match in matches)
+        {
+            foundResults.Add($"Key:{match.Key} Value:{match.Value} FileName:{file}");
+        }
+    }
+    if (foundResults.Any())
+    {
+        foundResults.ForEach(Console.WriteLine);
+    }
+    else
+    {
+        Console.WriteLine("No results matched your search.");
+    }
 }

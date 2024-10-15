@@ -21,4 +21,11 @@ public class FileUtility : IFileUtility
     {
         return _fileSystem.File.ReadAllText(fileName);
     }
+
+    public IEnumerable<string> GetAllFiles(string directoryPath, string[] allowedExtensions)
+    {
+        var allFiles = _fileSystem.Directory.GetFiles(directoryPath, "*.*", System.IO.SearchOption.AllDirectories);
+        return allFiles.Where(file => allowedExtensions.Contains(GetExtension(file)));
+
+    }
 }
