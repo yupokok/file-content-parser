@@ -43,6 +43,11 @@ void Display()
         dataList = new CsvContentParser().Parse(fileUtility.GetContent(fileName));
     }
 
+    else if (fileUtility.GetExtension(fileName) == ".json") 
+    {
+        dataList = new JsonContentParser().Parse(fileUtility.GetContent(fileName));
+    }
+
     Console.WriteLine("Data:");
 
     foreach (var data in dataList)

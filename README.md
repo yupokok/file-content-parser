@@ -1,4 +1,4 @@
-# Illumina Software Engineer Coding Assignment
+# Software Engineer Coding Assignment
 
 Coding Assignment App is a console application that accepts a file name and prints out the key-value data in the file. The application currently supports the `.csv` file extension.
 
